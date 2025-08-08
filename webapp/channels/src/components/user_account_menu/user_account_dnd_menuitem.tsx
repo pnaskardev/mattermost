@@ -206,12 +206,12 @@ export default function UserAccountDndMenuItem(props: Props) {
                 >
                     {formatMessage({
                         id: 'userAccountMenu.dndSubMenu.title',
-                        defaultMessage: 'Clear after:',
+                        defaultMessage: 'Disable notifications until...',
                     })}
                 </h5>
             }
         >
-            <Menu.Item
+            {/* <Menu.Item
                 id={DND_SUB_MENU_ITEMS_IDS.DO_NOT_CLEAR}
                 labels={
                     <FormattedMessage
@@ -220,7 +220,7 @@ export default function UserAccountDndMenuItem(props: Props) {
                     />
                 }
                 onClick={handleSubMenuItemClick}
-            />
+            /> */}
             <Menu.Item
                 id={DND_SUB_MENU_ITEMS_IDS.THIRTY_MINUTES}
                 labels={
@@ -289,6 +289,16 @@ export default function UserAccountDndMenuItem(props: Props) {
                     <FormattedMessage
                         id='userAccountMenu.dndSubMenuItem.custom'
                         defaultMessage='Choose date and time'
+                    />
+                }
+                onClick={openCustomTimePicker}
+            />
+            <Menu.Separator/>
+            <Menu.Item
+                labels={
+                    <FormattedMessage
+                        id='userAccountMenu.dndSubMenuItem.notificationSchedule'
+                        defaultMessage='Notification Schedule...'
                     />
                 }
                 onClick={openCustomTimePicker}

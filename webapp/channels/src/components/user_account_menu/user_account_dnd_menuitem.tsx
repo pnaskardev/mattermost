@@ -19,6 +19,7 @@ import {openModal} from 'actions/views/modals';
 import DndCustomTimePicker from 'components/dnd_custom_time_picker_modal';
 import * as Menu from 'components/menu';
 import ResetStatusModal from 'components/reset_status_modal';
+import UserSettingsModal from 'components/user_settings/modal';
 
 import {ModalIdentifiers, Preferences, UserStatuses} from 'utils/constants';
 import {getCurrentMomentForTimezone, getBrowserTimezone, getCurrentDateTimeForTimezone} from 'utils/timezone';
@@ -105,6 +106,17 @@ export default function UserAccountDndMenuItem(props: Props) {
             user_id: props.userId,
             status: UserStatuses.DND,
             dnd_end_time: endTime.utc().unix(),
+        }));
+    }
+
+    function handleDNDScheduleItemClick() {
+        dispatch(openModal({
+            modalId: ModalIdentifiers.NOTIFICATIONS,
+            dialogType: UserSettingsModal,
+            dialogProps: {
+                isContentProductSettings: true,
+                activeTab: 'notifications',
+            },
         }));
     }
 
@@ -301,7 +313,7 @@ export default function UserAccountDndMenuItem(props: Props) {
                         defaultMessage='Notification Schedule...'
                     />
                 }
-                onClick={openCustomTimePicker}
+                onClick={handleDNDScheduleItemClick}
             />
         </Menu.SubMenu>
     );

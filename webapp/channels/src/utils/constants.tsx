@@ -1059,6 +1059,7 @@ export const ChannelAutoFollowThreads = {
 } as const;
 
 export const UserSettingsNotificationSections = {
+    NOTIFICATION_SCHEDULE: 'notificationSchedule',
     DESKTOP_AND_MOBILE: 'desktopAndMobile',
     DESKTOP_NOTIFICATION_SOUND: 'desktopNotificationSound',
     EMAIL: 'email',

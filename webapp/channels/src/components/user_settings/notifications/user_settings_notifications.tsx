@@ -32,6 +32,7 @@ import DesktopAndMobileNotificationSettings from './desktop_and_mobile_notificat
 import DesktopNotificationSoundsSettings from './desktop_notification_sounds_setting';
 import EmailNotificationSetting from './email_notification_setting';
 import ManageAutoResponder from './manage_auto_responder/manage_auto_responder';
+import NotificationScheduleSettings from './notification_schedule_setting';
 import SendTestNotificationNotice from './send_test_notification_notice';
 
 import SettingDesktopHeader from '../headers/setting_desktop_header';
@@ -1046,6 +1047,16 @@ class NotificationsTab extends React.PureComponent<Props, State> {
                                 }}
                             />
                         }
+                    />
+                    <div className='divider-dark first'/>
+                    <NotificationScheduleSettings
+                        active={this.props.activeSection === UserSettingsNotificationSections.NOTIFICATION_SCHEDULE}
+                        updateSection={this.handleUpdateSection}
+                        onSubmit={this.handleSubmit}
+                        onCancel={this.handleCancel}
+                        saving={this.state.isSaving}
+                        error={this.state.serverError}
+                        areAllSectionsInactive={areAllSectionsInactive}
                     />
                     <div className='divider-dark first'/>
                     <DesktopAndMobileNotificationSettings

@@ -6164,6 +6164,7 @@
   "user.settings.notifications.desktopAndMobile.sendDesktopNotificationFor": "Send notifications for:",
   "user.settings.notifications.desktopAndMobile.sendMobileNotificationsFor": "Send mobile notifications for:",
   "user.settings.notifications.desktopAndMobile.title": "Desktop and mobile notifications",
+  "user.settings.notifications.notificationsSchedule.title": "Notifications Schedule",
   "user.settings.notifications.desktopNotificationSound.hasDesktopAndCallsSound": "\"{desktopSound}\" for messages, \"{callsSound}\" for calls",
   "user.settings.notifications.desktopNotificationSound.hasDesktopAndNoCallsSound": "\"{desktopSound}\" for messages, no sound for calls",
   "user.settings.notifications.desktopNotificationSound.hasDesktopSound": "\"{desktopSound}\" for messages",

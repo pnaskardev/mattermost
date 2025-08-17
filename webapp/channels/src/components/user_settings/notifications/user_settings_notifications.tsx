@@ -354,13 +354,6 @@ class NotificationsTab extends React.PureComponent<Props, State> {
         this.handleCancel();
     };
 
-    handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const enableEmail = e.currentTarget.getAttribute('data-enable-email')!;
-        a11yFocus(e.currentTarget);
-
-        this.props.onChange(enableEmail as UserNotifyProps['email']);
-    };
-
     setStateValue = (key: string, value: string | boolean): void => {
         const data: {[key: string]: string | boolean } = {};
         data[key] = value;
@@ -374,6 +367,11 @@ class NotificationsTab extends React.PureComponent<Props, State> {
 
     handleEmailRadio = (enableEmail: UserNotifyProps['email']): void => {
         this.setState({enableEmail});
+    };
+
+    handleNotificationScheduleRadio = (notificationSchedule: UserNotifyProps['schedule_notification']) => {
+        const booleanNotificationScheduleValue: boolean = notificationSchedule === 'true';
+        this.setState({notificationSchedule: booleanNotificationScheduleValue});
     };
 
     handleChangeForUsernameKeyCheckbox = (event: ChangeEvent<HTMLInputElement>) => {
@@ -1065,6 +1063,7 @@ class NotificationsTab extends React.PureComponent<Props, State> {
                     <NotificationScheduleSettings
                         active={this.props.activeSection === UserSettingsNotificationSections.NOTIFICATION_SCHEDULE}
                         notificationSchedule={this.state.notificationSchedule}
+                        notificationScheduleRadioChange={this.handleNotificationScheduleRadio}
                         updateSection={this.handleUpdateSection}
                         onSubmit={this.handleSubmit}
                         onCancel={this.handleCancel}

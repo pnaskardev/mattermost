@@ -35,32 +35,22 @@ function NotificationScheduleSettings({
 
     const maximizedSettingsInputs = useMemo(() => {
         const maximizedSettingInputs = [];
-        const disabledPushNotificationsSection = (
+        const scheduleNotificationSection = (
             <>
-                <FormattedMessage
-                    id='user.settings.notifications.desktopAndMobile.pushNotificationsDisabled'
-                    defaultMessage={'Mobile push notifications haven\'t been enabled by your system administrator.'}
-                />
-            </>
-        );
-        maximizedSettingInputs.push(disabledPushNotificationsSection);
-        const sendDesktopNotificationsSection = (
-            <>
-                <br/>
                 <fieldset
                     id='notificationsScheduleSection'
                     key='notificationsScheduleSection'
                 >
                     <legend className='form-legend'>
                         <FormattedMessage
-                            id='user.settings.notifications.desktopAndMobile.sendDesktopNotificationFor'
-                            defaultMessage='Send notifications for:'
+                            id='user.settings.notifications.notificationsSchedule.message'
+                            defaultMessage='Set a schedule for when you want to receive notifications. Outside of the set times, your status will be set to Do Not Disturb and notifications will be disabled.'
                         />
                     </legend>
                 </fieldset>
             </>
         );
-        maximizedSettingInputs.push(sendDesktopNotificationsSection);
+        maximizedSettingInputs.push(scheduleNotificationSection);
         return maximizedSettingInputs;
     },
     []);

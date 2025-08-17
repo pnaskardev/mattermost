@@ -8,10 +8,11 @@ import SettingItemMax from 'components/setting_item_max';
 import SettingItemMin from 'components/setting_item_min';
 import type SettingItemMinComponent from 'components/setting_item_min';
 
-import {UserSettingsNotificationSections} from 'utils/constants';
+import {Preferences, UserSettingsNotificationSections} from 'utils/constants';
 
 export type Props = {
     active: boolean;
+    notificationSchedule: boolean;
     updateSection: (section: string) => void;
     onSubmit: () => void;
     onCancel: () => void;
@@ -22,6 +23,7 @@ export type Props = {
 
 function NotificationScheduleSettings({
     active,
+    notificationSchedule,
     updateSection,
     onSubmit,
     onCancel,
@@ -47,6 +49,40 @@ function NotificationScheduleSettings({
                             defaultMessage='Set a schedule for when you want to receive notifications. Outside of the set times, your status will be set to Do Not Disturb and notifications will be disabled.'
                         />
                     </legend>
+                </fieldset>
+                <fieldset>
+                    <div className='radio'>
+                        <label>
+                            <input
+                                id='notificationsScheduleON'
+                                type='radio'
+                                name='notificationSchedule'
+                                checked={notificationSchedule === true}
+                                data-enable-email={'true'}
+                                data-email-interval={Preferences.INTERVAL_IMMEDIATE}
+                                onChange={this.handleChange}
+                            />
+                            <FormattedMessage
+                                id='user.settings.notifications.email.on'
+                                defaultMessage='On'
+                            />
+                        </label>
+                    </div>
+                    <div className='radio'>
+                        <label>
+                            <input
+                                id='notificationsScheduleOFF'
+                                type='radio'
+                                name='notificationSchedule'
+                                checked={notificationSchedule === false}
+                                onChange={this.handleChange}
+                            />
+                            <FormattedMessage
+                                id='user.settings.notifications.email.off'
+                                defaultMessage='Off'
+                            />
+                        </label>
+                    </div>
                 </fieldset>
             </>
         );

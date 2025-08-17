@@ -61,6 +61,7 @@ export type OwnProps = {
 export type Props = PropsFromRedux & OwnProps & WrappedComponentProps;
 
 type State = {
+    notificationSchedule: boolean;
     enableEmail: UserNotifyProps['email'];
     desktopActivity: UserNotifyProps['desktop'];
     desktopThreads: UserNotifyProps['desktop_threads'];
@@ -89,6 +90,7 @@ type State = {
 };
 
 function getDefaultStateFromProps(props: Props): State {
+    let notificationSchedule = false;
     let desktop: UserNotifyProps['desktop'] = NotificationLevels.MENTION;
     let desktopThreads: UserNotifyProps['desktop_threads'] = NotificationLevels.ALL;
     let pushThreads: UserNotifyProps['push_threads'] = NotificationLevels.ALL;
@@ -109,6 +111,9 @@ function getDefaultStateFromProps(props: Props): State {
     let desktopAndMobileSettingsDifferent = true;
 
     if (props.user.notify_props) {
+        if (props.user.notify_props.schedule_notification) {
+            notificationSchedule = props.user.notify_props.schedule_notification === 'true';
+        }
         if (props.user.notify_props.desktop) {
             desktop = props.user.notify_props.desktop;
         }
@@ -201,6 +206,7 @@ function getDefaultStateFromProps(props: Props): State {
     }
 
     return {
+        notificationSchedule,
         desktopActivity: desktop,
         desktopThreads,
         pushThreads,
@@ -346,6 +352,13 @@ class NotificationsTab extends React.PureComponent<Props, State> {
         }
         this.setState({isSaving: false});
         this.handleCancel();
+    };
+
+    handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const enableEmail = e.currentTarget.getAttribute('data-enable-email')!;
+        a11yFocus(e.currentTarget);
+
+        this.props.onChange(enableEmail as UserNotifyProps['email']);
     };
 
     setStateValue = (key: string, value: string | boolean): void => {
@@ -1051,6 +1064,7 @@ class NotificationsTab extends React.PureComponent<Props, State> {
                     <div className='divider-dark first'/>
                     <NotificationScheduleSettings
                         active={this.props.activeSection === UserSettingsNotificationSections.NOTIFICATION_SCHEDULE}
+                        notificationSchedule={this.state.notificationSchedule}
                         updateSection={this.handleUpdateSection}
                         onSubmit={this.handleSubmit}
                         onCancel={this.handleCancel}

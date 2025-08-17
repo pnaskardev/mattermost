@@ -9,6 +9,7 @@ import type {Team} from './teams';
 import type {IDMappedObjects, RelationOneToManyUnique, RelationOneToOne} from './utilities';
 
 export type UserNotifyProps = {
+    schedule_notification: 'true'|'false';
     desktop: 'default' | 'all' | 'mention' | 'none';
     desktop_sound: 'default' | 'true' | 'false';
     calls_desktop_sound: 'true' | 'false';

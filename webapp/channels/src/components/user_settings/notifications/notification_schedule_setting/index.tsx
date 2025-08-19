@@ -59,21 +59,33 @@ function NotificationScheduleSettings({
                             defaultMessage='Set a schedule for when you want to receive notifications. Outside of the set times, your status will be set to Do Not Disturb and notifications will be disabled.'
                         />
                     </legend>
-                </fieldset>
-                <fieldset>
-                    <div className='channel_banner_header__toggle'>
-                        <Toggle
-                            id='channelBannerToggle'
-                            ariaLabel={'Test'}
-                            size='btn-md'
-                            disabled={false}
-                            onToggle={handleToggle}
-                            toggled={notificationSchedule}
-                            tabIndex={0}
-                            toggleClassName='btn-toggle-primary'
-                        />
+                    <div className='ChannelSettingsModal__configurationTab'>
+                        <div className='channel_banner_header'>
+                            <div className='channel_banner_header__text'>
+                                <label
+                                    className='Input_legend'
+                                    aria-label={'heading'}
+                                >
+                                    {notificationSchedule ? 'Disable notification schedule' : 'Enable notification schedule'}
+                                </label>
+                            </div>
+
+                            <div className='channel_banner_header__toggle'>
+                                <Toggle
+                                    id='notificationScheduleToggle'
+                                    ariaLabel={'Test'}
+                                    size='btn-md'
+                                    disabled={false}
+                                    onToggle={handleToggle}
+                                    toggled={notificationSchedule}
+                                    tabIndex={0}
+                                    toggleClassName='btn-toggle-primary'
+                                />
+                            </div>
+                        </div>
                     </div>
                 </fieldset>
+
             </>
         );
         maximizedSettingInputs.push(scheduleNotificationSection);

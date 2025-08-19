@@ -258,17 +258,6 @@ class NotificationsTab extends React.PureComponent<Props, State> {
         this.state = getDefaultStateFromProps(props);
     }
 
-    componentDidMount() {
-        // eslint-disable-next-line no-console
-        console.log('Mounted with state:', this.state.notificationSchedule);
-    }
-
-    // called after every update (when props/state change)
-    componentDidUpdate() {
-        // eslint-disable-next-line no-console
-        console.log('Current state:', this.state.notificationSchedule);
-    }
-
     handleSubmit = async () => {
         const data: UserNotifyProps = {...this.props.user.notify_props};
         data.email = this.state.enableEmail;

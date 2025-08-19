@@ -47,6 +47,7 @@ function NotificationScheduleSettings({
     // }, [notificationSchedule, notificationScheduleRadioChange]);
 
     const handleChangeDiff = useCallback((id: string, value: boolean) => {
+        console.log(id, value); // eslint-disable-line no-console
         notificationScheduleRadioChange(value === true ? 'true' : 'false');
     }, [notificationSchedule, notificationScheduleRadioChange]);
 

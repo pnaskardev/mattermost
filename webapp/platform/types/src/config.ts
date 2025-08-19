@@ -225,7 +225,8 @@ export type ClientConfig = {
     UniqueEmojiReactionLimitPerPost: string;
     UsersStatusAndProfileFetchingPollIntervalMilliseconds: string;
     YoutubeReferrerPolicy: 'true' | 'false';
-    ScheduleNotifications: 'true'|'false';
+
+    // ScheduleNotifications: 'true' | 'false';
     ScheduledPosts: string;
     DeleteAccountLink: string;
     ContentFlaggingEnabled: 'true' | 'false';

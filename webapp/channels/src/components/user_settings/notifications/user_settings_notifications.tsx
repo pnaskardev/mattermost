@@ -61,7 +61,7 @@ export type OwnProps = {
 export type Props = PropsFromRedux & OwnProps & WrappedComponentProps;
 
 type State = {
-    notificationSchedule: boolean;
+    notificationSchedule: UserNotifyProps['schedule_notification'];
     enableEmail: UserNotifyProps['email'];
     desktopActivity: UserNotifyProps['desktop'];
     desktopThreads: UserNotifyProps['desktop_threads'];
@@ -90,7 +90,7 @@ type State = {
 };
 
 function getDefaultStateFromProps(props: Props): State {
-    let notificationSchedule = false;
+    let notificationSchedule: UserNotifyProps['schedule_notification'] = false;
     let desktop: UserNotifyProps['desktop'] = NotificationLevels.MENTION;
     let desktopThreads: UserNotifyProps['desktop_threads'] = NotificationLevels.ALL;
     let pushThreads: UserNotifyProps['push_threads'] = NotificationLevels.ALL;
@@ -112,7 +112,7 @@ function getDefaultStateFromProps(props: Props): State {
 
     if (props.user.notify_props) {
         if (props.user.notify_props.schedule_notification) {
-            notificationSchedule = props.user.notify_props.schedule_notification === 'true';
+            notificationSchedule = props.user.notify_props.schedule_notification;
         }
         if (props.user.notify_props.desktop) {
             desktop = props.user.notify_props.desktop;
@@ -258,6 +258,17 @@ class NotificationsTab extends React.PureComponent<Props, State> {
         this.state = getDefaultStateFromProps(props);
     }
 
+    componentDidMount() {
+        // eslint-disable-next-line no-console
+        console.log('Mounted with state:', this.state.notificationSchedule);
+    }
+
+    // called after every update (when props/state change)
+    componentDidUpdate() {
+        // eslint-disable-next-line no-console
+        console.log('Current state:', this.state.notificationSchedule);
+    }
+
     handleSubmit = async () => {
         const data: UserNotifyProps = {...this.props.user.notify_props};
         data.email = this.state.enableEmail;
@@ -369,9 +380,8 @@ class NotificationsTab extends React.PureComponent<Props, State> {
         this.setState({enableEmail});
     };
 
-    handleNotificationScheduleRadio = (notificationSchedule: UserNotifyProps['schedule_notification']) => {
-        const booleanNotificationScheduleValue: boolean = notificationSchedule === 'true';
-        this.setState({notificationSchedule: booleanNotificationScheduleValue});
+    handleNotificationScheduleToggle = (notificationSchedule: UserNotifyProps['schedule_notification']): void => {
+        this.setState({notificationSchedule});
     };
 
     handleChangeForUsernameKeyCheckbox = (event: ChangeEvent<HTMLInputElement>) => {
@@ -1063,7 +1073,7 @@ class NotificationsTab extends React.PureComponent<Props, State> {
                     <NotificationScheduleSettings
                         active={this.props.activeSection === UserSettingsNotificationSections.NOTIFICATION_SCHEDULE}
                         notificationSchedule={this.state.notificationSchedule}
-                        notificationScheduleRadioChange={this.handleNotificationScheduleRadio}
+                        notificationScheduleToggleChange={this.handleNotificationScheduleToggle}
                         updateSection={this.handleUpdateSection}
                         onSubmit={this.handleSubmit}
                         onCancel={this.handleCancel}

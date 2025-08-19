@@ -6,19 +6,18 @@ import {FormattedMessage} from 'react-intl';
 
 import type {UserNotifyProps} from '@mattermost/types/users';
 
-import BooleanSetting from 'components/admin_console/boolean_setting';
-import SettingsGroup from 'components/admin_console/settings_group';
 import SettingItemMax from 'components/setting_item_max';
 import type SettingItemMinComponent from 'components/setting_item_min';
 import SettingItemMin from 'components/setting_item_min';
+import Toggle from 'components/toggle';
 
 import {UserSettingsNotificationSections} from 'utils/constants';
 
 export type Props = {
     active: boolean;
     notificationSchedule: boolean;
-    notificationScheduleRadioChange: (notificationSchedule: UserNotifyProps['schedule_notification']) => void;
     updateSection: (section: string) => void;
+    notificationScheduleToggleChange: (notificationSchedule: UserNotifyProps['schedule_notification']) => void;
     onSubmit: () => void;
     onCancel: () => void;
     saving: boolean;
@@ -29,7 +28,7 @@ export type Props = {
 function NotificationScheduleSettings({
     active,
     notificationSchedule,
-    notificationScheduleRadioChange,
+    notificationScheduleToggleChange,
     updateSection,
     onSubmit,
     onCancel,
@@ -41,29 +40,10 @@ function NotificationScheduleSettings({
     const editButtonRef = useRef<SettingItemMinComponent>(null);
     const previousActiveRef = useRef(active);
 
-    // const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    //     // notificationScheduleRadioChange(id, e.target.value === 'true');
-    //     notificationScheduleRadioChange(e.target.value === 'true' ? 'true' : 'false');
-    // }, [notificationSchedule, notificationScheduleRadioChange]);
-
-    const handleChangeDiff = useCallback((id: string, value: boolean) => {
-        console.log(id, value); // eslint-disable-line no-console
-        notificationScheduleRadioChange(value === true ? 'true' : 'false');
-    }, [notificationSchedule, notificationScheduleRadioChange]);
-
-    // handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const enableEmail = e.currentTarget.getAttribute('data-enable-email')!;
-    //     const newInterval = parseInt(e.currentTarget.getAttribute('data-email-interval')!, 10);
-
-    //     this.setState({
-    //         enableEmail: enableEmail === 'true',
-    //         newInterval,
-    //     });
-
-    //     a11yFocus(e.currentTarget);
-
-    //     this.props.onChange(enableEmail as UserNotifyProps['email']);
-    // };
+    const handleToggle = useCallback(() => {
+        const newValue = !notificationSchedule;
+        notificationScheduleToggleChange(newValue as UserNotifyProps['schedule_notification']);
+    }, [notificationSchedule, notificationScheduleToggleChange]);
 
     const maximizedSettingsInputs = useMemo(() => {
         const maximizedSettingInputs = [];
@@ -81,69 +61,25 @@ function NotificationScheduleSettings({
                     </legend>
                 </fieldset>
                 <fieldset>
-                    {/* <div className='banner'>
-                        <FormattedMessage
-                            id={'user.settings.notifications.notificationsScheduleSetting.title'}
-                            defaultMessage='Enable notification schedule'
+                    <div className='channel_banner_header__toggle'>
+                        <Toggle
+                            id='channelBannerToggle'
+                            ariaLabel={'Test'}
+                            size='btn-md'
+                            disabled={false}
+                            onToggle={handleToggle}
+                            toggled={notificationSchedule}
+                            tabIndex={0}
+                            toggleClassName='btn-toggle-primary'
                         />
-                    </div> */}
-                    <SettingsGroup>
-                        <div className='banner'>
-                            <FormattedMessage
-                                id={'user.settings.notifications.notificationsScheduleSetting.title'}
-                                defaultMessage='Enable notification schedule'
-                            />
-                        </div>
-                        <div className='radio'>
-                            <BooleanSetting
-                                id={'notificationsScheduleBooleanSetting'}
-                                label={''}
-                                trueText={'On'}
-                                falseText={'Off'}
-                                value={notificationSchedule}
-                                onChange={handleChangeDiff}
-                                setByEnv={false}
-                                helpText={undefined}
-                            />
-                        </div>
-                    </SettingsGroup>
-                    {/* <div className='radio'>
-                        <label>
-                            <input
-                                id='emailNotificationImmediately'
-                                type='radio'
-                                name='emailNotifications'
-                                checked={notificationSchedule}
-                                onChange={handleChange}
-                            />
-                            <FormattedMessage
-                                id='user.settings.notifications.email.on'
-                                defaultMessage='On'
-                            />
-                        </label>
                     </div>
-                    <div className='radio'>
-                        <label>
-                            <input
-                                id='emailNotificationNever'
-                                type='radio'
-                                name='emailNotifications'
-                                checked={notificationSchedule}
-                                onChange={handleChange}
-                            />
-                            <FormattedMessage
-                                id='user.settings.notifications.email.off'
-                                defaultMessage='Off'
-                            />
-                        </label>
-                    </div> */}
                 </fieldset>
             </>
         );
         maximizedSettingInputs.push(scheduleNotificationSection);
         return maximizedSettingInputs;
     },
-    []);
+    [handleToggle, notificationSchedule]);
 
     // Focus back on the edit button, after this section was closed after it was opened
     useEffect(() => {

@@ -24,7 +24,7 @@ const mapStateToProps = (state: GlobalState, props: OwnProps) => {
     // server config, related to server configuration, not the user
     const config = getConfig(state);
 
-    const scheduleNotifications = config.ScheduleNotifications === 'true';
+    // const notificationSchedule = config.ScheduleNotifications === 'true';
     const sendPushNotifications = config.SendPushNotifications === 'true';
     const enableAutoResponder = config.ExperimentalEnableAutomaticReplies === 'true';
 
@@ -34,7 +34,8 @@ const mapStateToProps = (state: GlobalState, props: OwnProps) => {
     const isEnterpriseReady = config.BuildEnterpriseReady === 'true';
 
     return {
-        scheduleNotifications,
+
+        // notificationSchedule,
         sendPushNotifications,
         enableAutoResponder,
         isCollapsedThreadsEnabled: props.adminMode && props.userPreferences ? isCollapsedThreadsEnabledForUser(state, props.userPreferences) : isCollapsedThreadsEnabled(state),

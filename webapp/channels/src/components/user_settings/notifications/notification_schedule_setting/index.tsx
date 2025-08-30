@@ -10,6 +10,8 @@ import SettingItemMax from 'components/setting_item_max';
 import type SettingItemMinComponent from 'components/setting_item_min';
 import SettingItemMin from 'components/setting_item_min';
 import Toggle from 'components/toggle';
+import type {FieldsetReactSelect, SelectOption} from 'components/widgets/modals/components/react_select_item';
+import ReactSelectItemCreator from 'components/widgets/modals/components/react_select_item';
 
 import {UserSettingsNotificationSections} from 'utils/constants';
 
@@ -37,6 +39,34 @@ function NotificationScheduleSettings({
     areAllSectionsInactive,
 
 }: Props) {
+    const options: SelectOption[] = [
+        {value: 'every_day', label: 'Every Day'},
+        {value: 'weekdays', label: 'Weekdays'},
+        {value: 'custom_schedule', label: 'Custom Schedule'},
+    ];
+
+    const inputFieldData: FieldsetReactSelect = {
+        id: 'notification=schedule-select',
+        name: 'notificatio-schedule',
+        inputId: 'notification-schedule-input',
+        dataTestId: 'notification-schedule-select-test',
+        ariaLabelledby: 'notification-schedule-label',
+        clearable: false,
+        options,
+    };
+
+    // Step 3: Create inputFieldValue (default selected option)
+    const [inputFieldValue, setInputFieldValue] = React.useState<SelectOption>(options[0]);
+
+    // Step 4: Handle change
+    const handleChange = (selected: any) => {
+        if (selected) {
+            setInputFieldValue(selected as SelectOption);
+        } else {
+            setInputFieldValue({value: '', label: ''}); // or null handling
+        }
+    };
+
     const editButtonRef = useRef<SettingItemMinComponent>(null);
     const previousActiveRef = useRef(active);
 
@@ -84,6 +114,20 @@ function NotificationScheduleSettings({
                             </div>
                         </div>
                     </div>
+                    {notificationSchedule ? (
+                        <>
+                            <div className='form-select'>
+                                <div className='mt-2'>
+                                    <ReactSelectItemCreator
+                                        title='Allow notifications'
+                                        description='Test Description'
+                                        inputFieldData={inputFieldData}
+                                        inputFieldValue={inputFieldValue}
+                                        handleChange={handleChange}
+                                    />
+                                </div>
+                            </div>
+                        </>) : <></>}
                 </fieldset>
 
             </>

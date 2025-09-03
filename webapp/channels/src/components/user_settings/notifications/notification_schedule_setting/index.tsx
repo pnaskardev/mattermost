@@ -3,6 +3,7 @@
 
 import React, {useEffect, useRef, memo, useMemo, useCallback} from 'react';
 import {FormattedMessage} from 'react-intl';
+import type {OnChangeValue} from 'react-select';
 
 import type {UserNotifyProps} from '@mattermost/types/users';
 
@@ -55,11 +56,9 @@ function NotificationScheduleSettings({
         options,
     };
 
-    // Step 3: Create inputFieldValue (default selected option)
     const [inputFieldValue, setInputFieldValue] = React.useState<SelectOption>(options[0]);
 
-    // Step 4: Handle change
-    const handleChange = (selected: any) => {
+    const handleChange = (selected: OnChangeValue<SelectOption, boolean>) => {
         if (selected) {
             setInputFieldValue(selected as SelectOption);
         } else {
@@ -120,7 +119,6 @@ function NotificationScheduleSettings({
                                 <div className='mt-2'>
                                     <ReactSelectItemCreator
                                         title='Allow notifications'
-                                        description='Test Description'
                                         inputFieldData={inputFieldData}
                                         inputFieldValue={inputFieldValue}
                                         handleChange={handleChange}
@@ -135,7 +133,7 @@ function NotificationScheduleSettings({
         maximizedSettingInputs.push(scheduleNotificationSection);
         return maximizedSettingInputs;
     },
-    [handleToggle, notificationSchedule]);
+    [handleToggle, notificationSchedule, inputFieldValue]);
 
     // Focus back on the edit button, after this section was closed after it was opened
     useEffect(() => {

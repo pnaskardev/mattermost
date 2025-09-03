@@ -326,101 +326,102 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                 />
                                             </div>
                                         </div>
-                                        <div className='dateTime mt-4'>
-                                            <div
-                                                className='dateTime__time'
-                                            >
-                                                <Menu.Container
-                                                    menuButton={{
-                                                        id: 'time_button',
-                                                        dataTestId: 'time_button',
-                                                        'aria-label': 'Time',
-                                                        class: 'date-time-input',
-                                                        children: (
-                                                            <>
-                                                                {/* <span className='date-time-input__label'>{'Time'}</span> */}
-                                                                <span className='date-time-input__icon'>{ <i className='icon-clock-outline'/>}</span>
-                                                                <span className='date-time-input__value'>
+                                        {this.state.selectedPeriod.value === 'every_day' ?
+                                            (<div className='dateTime mt-4'>
+                                                <div
+                                                    className='dateTime__time'
+                                                >
+                                                    <Menu.Container
+                                                        menuButton={{
+                                                            id: 'time_button',
+                                                            dataTestId: 'time_button',
+                                                            'aria-label': 'Time',
+                                                            class: 'date-time-input',
+                                                            children: (
+                                                                <>
+                                                                    {/* <span className='date-time-input__label'>{'Time'}</span> */}
+                                                                    <span className='date-time-input__icon'>{ <i className='icon-clock-outline'/>}</span>
+                                                                    <span className='date-time-input__value'>
+                                                                        <FormattedMessage
+                                                                            id='primary.label'
+                                                                            defaultMessage={moment(dateOptions[0].value, 'HH:mm').format('HH:mm')}
+                                                                        />
+                                                                    </span>
+                                                                </>
+                                                            ),
+                                                        }}
+                                                        menu={{
+                                                            id: 'expiryTimeMenu',
+                                                            'aria-label': 'Choose a time',
+                                                            onToggle: () => {},
+                                                            width: '200px',
+                                                            className: 'time-menu-scrollable',
+                                                        }}
+                                                    >
+                                                        {dateOptions.map((option, index) => (
+                                                            <Menu.Item
+                                                                key={index}
+                                                                id={`time_option_${index}`}
+                                                                data-testid={`time_option_${index}`}
+                                                                labels={
                                                                     <FormattedMessage
                                                                         id='primary.label'
-                                                                        defaultMessage={moment(dateOptions[0].value, 'HH:mm').format('HH:mm')}
+                                                                        defaultMessage={moment(option.value, 'HH:mm').format('HH:mm')}
                                                                     />
-                                                                </span>
-                                                            </>
-                                                        ),
-                                                    }}
-                                                    menu={{
-                                                        id: 'expiryTimeMenu',
-                                                        'aria-label': 'Choose a time',
-                                                        onToggle: () => {},
-                                                        width: '200px',
-                                                        className: 'time-menu-scrollable',
-                                                    }}
+                                                                }
+                                                                onClick={() => {}}
+                                                            />
+                                                        ))}
+                                                    </Menu.Container>
+                                                </div>
+                                                <p className='mt-2'>{'to'}</p>
+                                                <div
+                                                    className='dateTime__time'
                                                 >
-                                                    {dateOptions.map((option, index) => (
-                                                        <Menu.Item
-                                                            key={index}
-                                                            id={`time_option_${index}`}
-                                                            data-testid={`time_option_${index}`}
-                                                            labels={
-                                                                <FormattedMessage
-                                                                    id='primary.label'
-                                                                    defaultMessage={moment(option.value, 'HH:mm').format('HH:mm')}
-                                                                />
-                                                            }
-                                                            onClick={() => {}}
-                                                        />
-                                                    ))}
-                                                </Menu.Container>
-                                            </div>
-                                            <p className='mt-2'>{'to'}</p>
-                                            <div
-                                                className='dateTime__time'
-                                            >
-                                                <Menu.Container
-                                                    menuButton={{
-                                                        id: 'time_button',
-                                                        dataTestId: 'time_button',
-                                                        'aria-label': 'Time',
-                                                        class: 'date-time-input',
-                                                        children: (
-                                                            <>
-                                                                {/* <span className='date-time-input__label'>{'Time'}</span> */}
-                                                                <span className='date-time-input__icon'>{ <i className='icon-clock-outline'/>}</span>
-                                                                <span className='date-time-input__value'>
+                                                    <Menu.Container
+                                                        menuButton={{
+                                                            id: 'time_button',
+                                                            dataTestId: 'time_button',
+                                                            'aria-label': 'Time',
+                                                            class: 'date-time-input',
+                                                            children: (
+                                                                <>
+                                                                    {/* <span className='date-time-input__label'>{'Time'}</span> */}
+                                                                    <span className='date-time-input__icon'>{ <i className='icon-clock-outline'/>}</span>
+                                                                    <span className='date-time-input__value'>
+                                                                        <FormattedMessage
+                                                                            id='primary.label'
+                                                                            defaultMessage={moment(dateOptions[0].value, 'HH:mm').format('HH:mm')}
+                                                                        />
+                                                                    </span>
+                                                                </>
+                                                            ),
+                                                        }}
+                                                        menu={{
+                                                            id: 'expiryTimeMenu',
+                                                            'aria-label': 'Choose a time',
+                                                            onToggle: () => {},
+                                                            width: '200px',
+                                                            className: 'time-menu-scrollable',
+                                                        }}
+                                                    >
+                                                        {dateOptions.map((option, index) => (
+                                                            <Menu.Item
+                                                                key={index}
+                                                                id={`time_option_${index}`}
+                                                                data-testid={`time_option_${index}`}
+                                                                labels={
                                                                     <FormattedMessage
                                                                         id='primary.label'
-                                                                        defaultMessage={moment(dateOptions[0].value, 'HH:mm').format('HH:mm')}
+                                                                        defaultMessage={moment(option.value, 'HH:mm').format('HH:mm')}
                                                                     />
-                                                                </span>
-                                                            </>
-                                                        ),
-                                                    }}
-                                                    menu={{
-                                                        id: 'expiryTimeMenu',
-                                                        'aria-label': 'Choose a time',
-                                                        onToggle: () => {},
-                                                        width: '200px',
-                                                        className: 'time-menu-scrollable',
-                                                    }}
-                                                >
-                                                    {dateOptions.map((option, index) => (
-                                                        <Menu.Item
-                                                            key={index}
-                                                            id={`time_option_${index}`}
-                                                            data-testid={`time_option_${index}`}
-                                                            labels={
-                                                                <FormattedMessage
-                                                                    id='primary.label'
-                                                                    defaultMessage={moment(option.value, 'HH:mm').format('HH:mm')}
-                                                                />
-                                                            }
-                                                            onClick={() => {}}
-                                                        />
-                                                    ))}
-                                                </Menu.Container>
-                                            </div>
-                                        </div>
+                                                                }
+                                                                onClick={() => {}}
+                                                            />
+                                                        ))}
+                                                    </Menu.Container>
+                                                </div>
+                                            </div>) : <></>}
                                     </>) : <></>}
                             </fieldset>
 

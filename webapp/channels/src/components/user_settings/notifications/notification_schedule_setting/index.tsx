@@ -1,20 +1,46 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import React, {useEffect, useRef, memo, useMemo, useCallback} from 'react';
+import React, {memo} from 'react';
 import {FormattedMessage} from 'react-intl';
-import type {OnChangeValue} from 'react-select';
+import type {OnChangeValue, SingleValue} from 'react-select';
+import ReactSelect from 'react-select';
 
 import type {UserNotifyProps} from '@mattermost/types/users';
 
 import SettingItemMax from 'components/setting_item_max';
-import type SettingItemMinComponent from 'components/setting_item_min';
 import SettingItemMin from 'components/setting_item_min';
 import Toggle from 'components/toggle';
 import type {FieldsetReactSelect, SelectOption} from 'components/widgets/modals/components/react_select_item';
 import ReactSelectItemCreator from 'components/widgets/modals/components/react_select_item';
 
 import {UserSettingsNotificationSections} from 'utils/constants';
+
+type State = {
+    selectedPeriod: SelectOption;
+    sunEnable: boolean;
+    monEnable: boolean;
+    tueEnable: boolean;
+    wedEnable: boolean;
+    thuEnable: boolean;
+    friEnable: boolean;
+    satEnable: boolean;
+    sunStart: {value: string; label: string};
+    monStart: {value: string; label: string};
+    tueStart: {value: string; label: string};
+    wedStart: {value: string; label: string};
+    thuStart: {value: string; label: string};
+    friStart: {value: string; label: string};
+    satStart: {value: string; label: string};
+    sunEnd: {value: string; label: string};
+    monEnd: {value: string; label: string};
+    tueEnd: {value: string; label: string};
+    wedEnd: {value: string; label: string};
+    thuEnd: {value: string; label: string};
+    friEnd: {value: string; label: string};
+    satEnd: {value: string; label: string};
+    enableCustomDND: boolean;
+};
 
 export type Props = {
     active: boolean;
@@ -28,164 +54,351 @@ export type Props = {
     areAllSectionsInactive: boolean;
 };
 
-function NotificationScheduleSettings({
-    active,
-    notificationSchedule,
-    notificationScheduleToggleChange,
-    updateSection,
-    onSubmit,
-    onCancel,
-    saving,
-    error,
-    areAllSectionsInactive,
+const period: SelectOption[] = [
+    {value: 'every_day', label: 'Every Day'},
+    {value: 'weekdays', label: 'Weekdays'},
+    {value: 'custom_schedule', label: 'Custom Schedule'},
+];
 
-}: Props) {
-    const options: SelectOption[] = [
-        {value: 'every_day', label: 'Every Day'},
-        {value: 'weekdays', label: 'Weekdays'},
-        {value: 'custom_schedule', label: 'Custom Schedule'},
-    ];
+const dateOptions = [
+    {value: '09:00', label: '09:00'},
+    {value: '09:30', label: '09:30'},
+    {value: '10:00', label: '10:00'},
+    {value: '10:30', label: '10:30'},
+    {value: '11:00', label: '11:00'},
+    {value: '11:30', label: '11:30'},
+    {value: '12:00', label: '12:00'},
+    {value: '12:30', label: '12:30'},
+    {value: '13:00', label: '13:00'},
+    {value: '13:30', label: '13:30'},
+    {value: '14:00', label: '14:00'},
+    {value: '14:30', label: '14:30'},
+    {value: '15:00', label: '15:00'},
+    {value: '15:30', label: '15:30'},
+    {value: '16:00', label: '16:00'},
+    {value: '16:30', label: '16:30'},
+    {value: '17:00', label: '17:00'},
+    {value: '17:30', label: '17:30'},
+    {value: '18:00', label: '18:00'},
+    {value: '18:30', label: '18:30'},
+    {value: '19:00', label: '19:00'},
+    {value: '19:30', label: '19:30'},
+    {value: '20:00', label: '20:00'},
+    {value: '20:30', label: '20:30'},
+    {value: '21:00', label: '21:00'},
+    {value: '21:30', label: '21:30'},
+    {value: '22:00', label: '22:00'},
+    {value: '22:30', label: '22:30'},
+    {value: '23:00', label: '23:00'},
+    {value: '23:30', label: '23:30'},
+    {value: '24:00', label: '24:00'},
+    {value: '24:30', label: '24:30'},
+    {value: '01:00', label: '01:00'},
+    {value: '01:30', label: '01:30'},
+    {value: '02:00', label: '02:00'},
+    {value: '02:30', label: '02:30'},
+    {value: '03:00', label: '03:00'},
+    {value: '03:30', label: '03:30'},
+    {value: '04:00', label: '04:00'},
+    {value: '04:30', label: '04:30'},
+    {value: '05:00', label: '05:00'},
+    {value: '05:30', label: '05:30'},
+    {value: '06:00', label: '06:00'},
+    {value: '06:30', label: '06:30'},
+    {value: '07:00', label: '07:00'},
+    {value: '07:30', label: '07:30'},
+    {value: '08:00', label: '08:00'},
+    {value: '08:30', label: '08:30'},
+];
 
-    const inputFieldData: FieldsetReactSelect = {
-        id: 'notification=schedule-select',
-        name: 'notificatio-schedule',
-        inputId: 'notification-schedule-input',
-        dataTestId: 'notification-schedule-select-test',
-        ariaLabelledby: 'notification-schedule-label',
-        clearable: false,
-        options,
-    };
+class NotificationScheduleSettings extends React.PureComponent<Props, State> {
+    editButtonRef = React.createRef<any>();
+    previousActive: boolean;
 
-    const [inputFieldValue, setInputFieldValue] = React.useState<SelectOption>(options[0]);
+    constructor(props: Props) {
+        super(props);
 
-    const handleChange = (selected: OnChangeValue<SelectOption, boolean>) => {
-        if (selected) {
-            setInputFieldValue(selected as SelectOption);
-        } else {
-            setInputFieldValue({value: '', label: ''}); // or null handling
+        this.state = {
+            selectedPeriod: period[0],
+            sunEnable: false,
+            monEnable: false,
+            tueEnable: false,
+            wedEnable: false,
+            thuEnable: false,
+            friEnable: false,
+            satEnable: false,
+            sunStart: {value: '09:00', label: '09:00'},
+            tueStart: {value: '09:00', label: '09:00'},
+            monStart: {value: '09:00', label: '09:00'},
+            wedStart: {value: '09:00', label: '09:00'},
+            thuStart: {value: '09:00', label: '09:00'},
+            friStart: {value: '09:00', label: '09:00'},
+            satStart: {value: '09:00', label: '09:00'},
+            sunEnd: {value: '18:00', label: '18:00'},
+            monEnd: {value: '18:00', label: '18:00'},
+            tueEnd: {value: '18:00', label: '18:00'},
+            wedEnd: {value: '18:00', label: '18:00'},
+            thuEnd: {value: '18:00', label: '18:00'},
+            friEnd: {value: '18:00', label: '18:00'},
+            satEnd: {value: '18:00', label: '18:00'},
+            enableCustomDND: props.notificationSchedule,
+        };
+
+        this.previousActive = props.active;
+    }
+    componentDidUpdate(): void {
+        const {active, areAllSectionsInactive} = this.props;
+
+        if (this.previousActive && !active && areAllSectionsInactive) {
+            this.editButtonRef.current?.focus();
         }
+
+        this.previousActive = active;
+    }
+
+    handlePeriodChange = (selected: OnChangeValue<SelectOption, boolean>) => {
+        this.setState({
+            selectedPeriod: selected as SelectOption,
+        });
     };
 
-    const editButtonRef = useRef<SettingItemMinComponent>(null);
-    const previousActiveRef = useRef(active);
-
-    const handleToggle = useCallback(() => {
+    handleToggle = () => {
+        const {notificationSchedule, notificationScheduleToggleChange} =
+        this.props;
         const newValue = !notificationSchedule;
-        notificationScheduleToggleChange(newValue as UserNotifyProps['schedule_notification']);
-    }, [notificationSchedule, notificationScheduleToggleChange]);
+        notificationScheduleToggleChange(newValue);
+    };
 
-    const maximizedSettingsInputs = useMemo(() => {
-        const maximizedSettingInputs = [];
-        const scheduleNotificationSection = (
-            <>
-                <fieldset
-                    id='notificationsScheduleSection'
-                    key='notificationsScheduleSection'
-                >
-                    <legend className='form-legend'>
-                        <FormattedMessage
-                            id='user.settings.notifications.notificationsSchedule.message'
-                            defaultMessage='Set a schedule for when you want to receive notifications. Outside of the set times, your status will be set to Do Not Disturb and notifications will be disabled.'
-                        />
-                    </legend>
-                    <div className='ChannelSettingsModal__configurationTab'>
-                        <div className='channel_banner_header'>
-                            <div className='channel_banner_header__text'>
-                                <label
-                                    className='Input_legend'
-                                    aria-label={'heading'}
-                                >
-                                    {notificationSchedule ? 'Disable notification schedule' : 'Enable notification schedule'}
-                                </label>
-                            </div>
+    handleChangeForMaxSection = (section: string) => {
+        this.props.updateSection(section);
+    };
 
-                            <div className='channel_banner_header__toggle'>
-                                <Toggle
-                                    id='notificationScheduleToggle'
-                                    ariaLabel={'Test'}
-                                    size='btn-md'
-                                    disabled={false}
-                                    onToggle={handleToggle}
-                                    toggled={notificationSchedule}
-                                    tabIndex={0}
-                                    toggleClassName='btn-toggle-primary'
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    {notificationSchedule ? (
-                        <>
-                            <div className='form-select'>
-                                <div className='mt-2'>
-                                    <ReactSelectItemCreator
-                                        title='Allow notifications'
-                                        inputFieldData={inputFieldData}
-                                        inputFieldValue={inputFieldValue}
-                                        handleChange={handleChange}
-                                    />
-                                </div>
-                            </div>
-                        </>) : <></>}
-                </fieldset>
+    handleChangeForMinSection = (section: string) => {
+        this.props.updateSection(section);
+        this.props.onCancel();
+    };
 
-            </>
-        );
-        maximizedSettingInputs.push(scheduleNotificationSection);
-        return maximizedSettingInputs;
-    },
-    [handleToggle, notificationSchedule, inputFieldValue]);
+    handleDayChange = (
+        e: React.ChangeEvent<HTMLInputElement>,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        start: string,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        end: string,
+    ) => {
+        const {checked, id} = e.target;
+        this.setState({[id.replace('Enable', 'Enable')]: checked} as any);
+    };
 
-    // Focus back on the edit button, after this section was closed after it was opened
-    useEffect(() => {
-        if (previousActiveRef.current && !active && areAllSectionsInactive) {
-            editButtonRef.current?.focus();
+    handleTimeChange = (option: SingleValue<{value: string; label: string}>, target: string) => {
+        if (this.state.selectedPeriod.value === 'every_day') {
+            if (target === 'start') {
+                this.setState({
+                    monStart: option as {value: string; label: string},
+                    tueStart: option as {value: string; label: string},
+                    wedStart: option as {value: string; label: string},
+                    thuStart: option as {value: string; label: string},
+                    sunStart: option as {value: string; label: string},
+                    friStart: option as {value: string; label: string},
+                    satStart: option as {value: string; label: string},
+                });
+            } else {
+                this.setState({
+                    sunEnd: option as {value: string; label: string},
+                    monEnd: option as {value: string; label: string},
+                    tueEnd: option as {value: string; label: string},
+                    wedEnd: option as {value: string; label: string},
+                    thuEnd: option as {value: string; label: string},
+                    friEnd: option as {value: string; label: string},
+                    satEnd: option as {value: string; label: string},
+                });
+            }
+        } else if (this.state.selectedPeriod.label === 'weekdays') {
+            if (target === 'start') {
+                this.setState({
+                    tueStart: option as {value: string; label: string},
+                    wedStart: option as {value: string; label: string},
+                    thuStart: option as {value: string; label: string},
+                    friStart: option as {value: string; label: string},
+                    monStart: option as {value: string; label: string},
+                });
+            } else {
+                this.setState({
+                    tueEnd: option as {value: string; label: string},
+                    wedEnd: option as {value: string; label: string},
+                    thuEnd: option as {value: string; label: string},
+                    friEnd: option as {value: string; label: string},
+                    monEnd: option as {value: string; label: string},
+                });
+            }
+        } else {
+            // this.setState({
+            //     [target]: option ,
+            // });
+        }
+    };
+
+    render() {
+        const {
+            active,
+            notificationSchedule,
+            updateSection,
+            onSubmit,
+            onCancel,
+            saving,
+            error,
+        } = this.props;
+
+        const notificationPeriodData: FieldsetReactSelect = {
+            id: 'notification=schedule-select',
+            name: 'notificatio-schedule',
+            inputId: 'notification-schedule-input',
+            dataTestId: 'notification-schedule-select-test',
+            ariaLabelledby: 'notification-schedule-label',
+            clearable: false,
+            options: period,
+        };
+
+        function handleChangeForMaxSection(section: string) {
+            updateSection(section);
         }
 
-        previousActiveRef.current = active;
-    }, [active, areAllSectionsInactive]);
+        function handleChangeForMinSection(section: string) {
+            updateSection(section);
+            onCancel();
+        }
 
-    function handleChangeForMaxSection(section: string) {
-        updateSection(section);
-    }
+        if (active) {
+            return (
+                <SettingItemMax
+                    title={
+                        <FormattedMessage
+                            id={'user.settings.notifications.notificationsSchedule.title'}
+                            defaultMessage='Notifications Schedule'
+                        />
+                    }
+                    inputs={[
+                        <>
+                            <fieldset
+                                id='notificationsScheduleSection'
+                                key='notificationsScheduleSection'
+                            >
+                                <legend className='form-legend'>
+                                    <FormattedMessage
+                                        id='user.settings.notifications.notificationsSchedule.message'
+                                        defaultMessage='Set a schedule for when you want to receive notifications. Outside of the set times, your status will be set to Do Not Disturb and notifications will be disabled.'
+                                    />
+                                </legend>
+                                <div className='ChannelSettingsModal__configurationTab'>
+                                    <div className='channel_banner_header'>
+                                        <div className='channel_banner_header__text'>
+                                            <label
+                                                className='Input_legend'
+                                                aria-label={'heading'}
+                                            >
+                                                {notificationSchedule ? 'Disable notification schedule' : 'Enable notification schedule'}
+                                            </label>
+                                        </div>
 
-    function handleChangeForMinSection(section: string) {
-        updateSection(section);
-        onCancel();
-    }
+                                        <div className='channel_banner_header__toggle'>
+                                            <Toggle
+                                                id='notificationScheduleToggle'
+                                                ariaLabel={'Test'}
+                                                size='btn-md'
+                                                disabled={false}
+                                                onToggle={this.handleToggle}
+                                                toggled={notificationSchedule}
+                                                tabIndex={0}
+                                                toggleClassName='btn-toggle-primary'
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                {notificationSchedule ? (
+                                    <>
+                                        <div className='form-select'>
+                                            <div className='mt-2'>
+                                                <ReactSelectItemCreator
+                                                    title='Allow notifications'
+                                                    inputFieldData={notificationPeriodData}
+                                                    inputFieldValue={this.state.selectedPeriod}
+                                                    handleChange={this.handlePeriodChange}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className='time-wrapper n-custom-time'>
+                                            <div className='left-wrapper'>
+                                                <span className='time-icon'>
+                                                    <i className='icon-clock-outline'/>
+                                                </span>
+                                                <ReactSelect
+                                                    isDisabled={!this.state.enableCustomDND}
+                                                    components={{
+                                                        IndicatorSeparator: () => null,
+                                                        DropdownIndicator: () => null,
+                                                    }}
+                                                    className='react-select time'
+                                                    classNamePrefix='react-select'
+                                                    options={dateOptions}
+                                                    id='start'
+                                                    value={this.state.monStart}
+                                                    isSearchable={false}
+                                                    onChange={(option) =>
+                                                        this.handleTimeChange(option, 'start')
+                                                    }
+                                                />
+                                            </div>
+                                            <p>{'to'}</p>
+                                            <div className='right-wrapper'>
+                                                <span className='time-icon'>
+                                                    <i className='icon-clock-outline'/>
+                                                </span>
+                                                <ReactSelect
+                                                    isDisabled={!this.state.enableCustomDND}
+                                                    components={{
+                                                        IndicatorSeparator: () => null,
+                                                        DropdownIndicator: () => null,
+                                                    }}
+                                                    className='react-select time'
+                                                    classNamePrefix='react-select'
+                                                    options={dateOptions}
+                                                    id='end'
+                                                    value={this.state.monEnd}
+                                                    isSearchable={false}
+                                                    onChange={(option) =>
+                                                        this.handleTimeChange(option, 'end')
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                    </>) : <></>}
+                            </fieldset>
 
-    if (active) {
+                        </>,
+                    ]}
+                    submit={onSubmit}
+                    saving={saving}
+                    serverError={error}
+                    updateSection={handleChangeForMaxSection}
+                />
+            );
+        }
+
         return (
-            <SettingItemMax
+            <SettingItemMin
+                ref={this.editButtonRef}
                 title={
-                    <FormattedMessage
-                        id={'user.settings.notifications.notificationsSchedule.title'}
-                        defaultMessage='Notifications Schedule'
-                    />
+                    <>
+                        <FormattedMessage
+                            id='user.settings.notifications.notificationsSchedule.title'
+                            defaultMessage='Notifications Schedule'
+                        />
+                    </>
                 }
-                inputs={maximizedSettingsInputs}
-                submit={onSubmit}
-                saving={saving}
-                serverError={error}
-                updateSection={handleChangeForMaxSection}
+                section={UserSettingsNotificationSections.NOTIFICATION_SCHEDULE}
+                updateSection={handleChangeForMinSection}
             />
         );
     }
-
-    return (
-        <SettingItemMin
-            ref={editButtonRef}
-            title={
-                <>
-                    <FormattedMessage
-                        id='user.settings.notifications.notificationsSchedule.title'
-                        defaultMessage='Notifications Schedule'
-                    />
-                </>
-            }
-            section={UserSettingsNotificationSections.NOTIFICATION_SCHEDULE}
-            updateSection={handleChangeForMinSection}
-        />
-    );
 }
 
 export default memo(NotificationScheduleSettings);

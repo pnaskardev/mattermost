@@ -1,13 +1,14 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
+import moment from 'moment';
 import React, {memo} from 'react';
 import {FormattedMessage} from 'react-intl';
 import type {OnChangeValue, SingleValue} from 'react-select';
-import ReactSelect from 'react-select';
 
 import type {UserNotifyProps} from '@mattermost/types/users';
 
+import * as Menu from 'components/menu';
 import SettingItemMax from 'components/setting_item_max';
 import SettingItemMin from 'components/setting_item_min';
 import Toggle from 'components/toggle';
@@ -325,49 +326,99 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                 />
                                             </div>
                                         </div>
-                                        <div className='time-wrapper n-custom-time'>
-                                            <div className='left-wrapper'>
-                                                <span className='time-icon'>
-                                                    <i className='icon-clock-outline'/>
-                                                </span>
-                                                <ReactSelect
-                                                    isDisabled={!this.state.enableCustomDND}
-                                                    components={{
-                                                        IndicatorSeparator: () => null,
-                                                        DropdownIndicator: () => null,
+                                        <div className='dateTime mt-4'>
+                                            <div
+                                                className='dateTime__time'
+                                            >
+                                                <Menu.Container
+                                                    menuButton={{
+                                                        id: 'time_button',
+                                                        dataTestId: 'time_button',
+                                                        'aria-label': 'Time',
+                                                        class: 'date-time-input',
+                                                        children: (
+                                                            <>
+                                                                {/* <span className='date-time-input__label'>{'Time'}</span> */}
+                                                                <span className='date-time-input__icon'>{ <i className='icon-clock-outline'/>}</span>
+                                                                <span className='date-time-input__value'>
+                                                                    <FormattedMessage
+                                                                        id='primary.label'
+                                                                        defaultMessage={moment(dateOptions[0].value, 'HH:mm').format('HH:mm')}
+                                                                    />
+                                                                </span>
+                                                            </>
+                                                        ),
                                                     }}
-                                                    className='react-select time'
-                                                    classNamePrefix='react-select'
-                                                    options={dateOptions}
-                                                    id='start'
-                                                    value={this.state.monStart}
-                                                    isSearchable={false}
-                                                    onChange={(option) =>
-                                                        this.handleTimeChange(option, 'start')
-                                                    }
-                                                />
+                                                    menu={{
+                                                        id: 'expiryTimeMenu',
+                                                        'aria-label': 'Choose a time',
+                                                        onToggle: () => {},
+                                                        width: '200px',
+                                                        className: 'time-menu-scrollable',
+                                                    }}
+                                                >
+                                                    {dateOptions.map((option, index) => (
+                                                        <Menu.Item
+                                                            key={index}
+                                                            id={`time_option_${index}`}
+                                                            data-testid={`time_option_${index}`}
+                                                            labels={
+                                                                <FormattedMessage
+                                                                    id='primary.label'
+                                                                    defaultMessage={moment(option.value, 'HH:mm').format('HH:mm')}
+                                                                />
+                                                            }
+                                                            onClick={() => {}}
+                                                        />
+                                                    ))}
+                                                </Menu.Container>
                                             </div>
-                                            <p>{'to'}</p>
-                                            <div className='right-wrapper'>
-                                                <span className='time-icon'>
-                                                    <i className='icon-clock-outline'/>
-                                                </span>
-                                                <ReactSelect
-                                                    isDisabled={!this.state.enableCustomDND}
-                                                    components={{
-                                                        IndicatorSeparator: () => null,
-                                                        DropdownIndicator: () => null,
+                                            <p className='mt-2'>{'to'}</p>
+                                            <div
+                                                className='dateTime__time'
+                                            >
+                                                <Menu.Container
+                                                    menuButton={{
+                                                        id: 'time_button',
+                                                        dataTestId: 'time_button',
+                                                        'aria-label': 'Time',
+                                                        class: 'date-time-input',
+                                                        children: (
+                                                            <>
+                                                                {/* <span className='date-time-input__label'>{'Time'}</span> */}
+                                                                <span className='date-time-input__icon'>{ <i className='icon-clock-outline'/>}</span>
+                                                                <span className='date-time-input__value'>
+                                                                    <FormattedMessage
+                                                                        id='primary.label'
+                                                                        defaultMessage={moment(dateOptions[0].value, 'HH:mm').format('HH:mm')}
+                                                                    />
+                                                                </span>
+                                                            </>
+                                                        ),
                                                     }}
-                                                    className='react-select time'
-                                                    classNamePrefix='react-select'
-                                                    options={dateOptions}
-                                                    id='end'
-                                                    value={this.state.monEnd}
-                                                    isSearchable={false}
-                                                    onChange={(option) =>
-                                                        this.handleTimeChange(option, 'end')
-                                                    }
-                                                />
+                                                    menu={{
+                                                        id: 'expiryTimeMenu',
+                                                        'aria-label': 'Choose a time',
+                                                        onToggle: () => {},
+                                                        width: '200px',
+                                                        className: 'time-menu-scrollable',
+                                                    }}
+                                                >
+                                                    {dateOptions.map((option, index) => (
+                                                        <Menu.Item
+                                                            key={index}
+                                                            id={`time_option_${index}`}
+                                                            data-testid={`time_option_${index}`}
+                                                            labels={
+                                                                <FormattedMessage
+                                                                    id='primary.label'
+                                                                    defaultMessage={moment(option.value, 'HH:mm').format('HH:mm')}
+                                                                />
+                                                            }
+                                                            onClick={() => {}}
+                                                        />
+                                                    ))}
+                                                </Menu.Container>
                                             </div>
                                         </div>
                                     </>) : <></>}

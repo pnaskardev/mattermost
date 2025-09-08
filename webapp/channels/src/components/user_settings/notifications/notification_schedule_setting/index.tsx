@@ -57,7 +57,7 @@ export type Props = {
 
 const period: SelectOption[] = [
     {value: 'every_day', label: 'Every Day'},
-    {value: 'weekdays', label: 'Weekdays'},
+    {value: 'weekdays', label: 'Weekdays (Mon - Fri)'},
     {value: 'custom_schedule', label: 'Custom Schedule'},
 ];
 
@@ -326,7 +326,7 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                 />
                                             </div>
                                         </div>
-                                        {this.state.selectedPeriod.value === 'every_day' ?
+                                        {this.state.selectedPeriod.value === 'every_day' || this.state.selectedPeriod.value === 'weekdays' ?
                                             (<div className='dateTime mt-4'>
                                                 <div
                                                     className='dateTime__time'
@@ -421,7 +421,9 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                         ))}
                                                     </Menu.Container>
                                                 </div>
-                                            </div>) : <></>}
+                                            </div>) : <>
+                                                <div>{'Hello World'}</div>
+                                            </>}
                                     </>) : <></>}
                             </fieldset>
 

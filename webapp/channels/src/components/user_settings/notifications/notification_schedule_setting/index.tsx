@@ -433,7 +433,7 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                                 checked={true}
                                                                 onChange={() => {}}
                                                             />
-                                                            <span style={{fontWeight: '500', color: '#1f2937', minWidth: '50px'}}>{day}</span>
+                                                            <span>{day}</span>
                                                         </label>
                                                         <div className='dateTime__time'>
                                                             <Menu.Container

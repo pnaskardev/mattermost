@@ -425,11 +425,9 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
                                                     <div
                                                         key={day}
-                                                        style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}
-                                                        className='gap-6 py-2 px-4 items-center border-b border-gray-200'
+                                                        style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px', marginBottom: '12px'}}
                                                     >
-                                                        {/* Checkbox + Day */}
-                                                        <label className='flex items-center gap-2 w-24'>
+                                                        <label className='flex items-center gap-2'>
                                                             <input
                                                                 type='checkbox'
                                                                 checked={true}
@@ -437,9 +435,7 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                             />
                                                             <span className='font-medium text-gray-800'>{day}</span>
                                                         </label>
-
-                                                        {/* Start Time */}
-                                                        <div className='dateTime__time w-40'>
+                                                        <div className='dateTime__time'>
                                                             <Menu.Container
                                                                 menuButton={{
                                                                     id: `${day}_time_button_start`,
@@ -483,7 +479,6 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                             </Menu.Container>
                                                         </div>
 
-                                                        {/* 'to' */}
                                                         <span className='text-gray-600'>
                                                             <FormattedMessage
                                                                 id='to'
@@ -491,8 +486,7 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                             />
                                                         </span>
 
-                                                        {/* End Time */}
-                                                        <div className='dateTime__time w-40'>
+                                                        <div className='dateTime__time'>
                                                             <Menu.Container
                                                                 menuButton={{
                                                                     id: `${day}_time_button_end`,
@@ -536,7 +530,6 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                             </Menu.Container>
                                                         </div>
                                                     </div>
-
                                                 ))}
                                             </div>
                                         }

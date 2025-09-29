@@ -425,7 +425,7 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
                                                     <div
                                                         key={day}
-                                                        style={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}
+                                                        style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}
                                                         className='gap-6 py-2 px-4 items-center border-b border-gray-200'
                                                     >
                                                         {/* Checkbox + Day */}

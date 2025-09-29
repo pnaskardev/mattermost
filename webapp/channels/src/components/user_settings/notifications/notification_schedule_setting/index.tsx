@@ -427,13 +427,13 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                         key={day}
                                                         style={{display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '16px', marginBottom: '12px'}}
                                                     >
-                                                        <label className='flex items-center gap-2'>
+                                                        <label style={{display: 'flex', alignItems: 'center', gap: '16px'}}>
                                                             <input
                                                                 type='checkbox'
                                                                 checked={true}
                                                                 onChange={() => {}}
                                                             />
-                                                            <span className='font-medium text-gray-800'>{day}</span>
+                                                            <span>{day}</span>
                                                         </label>
                                                         <div className='dateTime__time'>
                                                             <Menu.Container

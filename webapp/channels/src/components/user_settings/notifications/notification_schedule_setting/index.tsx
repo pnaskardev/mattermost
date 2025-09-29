@@ -92,8 +92,8 @@ const dateOptions = [
     {value: '22:30', label: '22:30'},
     {value: '23:00', label: '23:00'},
     {value: '23:30', label: '23:30'},
-    {value: '24:00', label: '24:00'},
-    {value: '24:30', label: '24:30'},
+    {value: '00:00', label: '00:00'},
+    {value: '00:30', label: '00:30'},
     {value: '01:00', label: '01:00'},
     {value: '01:30', label: '01:30'},
     {value: '02:00', label: '02:00'},
@@ -421,9 +421,121 @@ class NotificationScheduleSettings extends React.PureComponent<Props, State> {
                                                         ))}
                                                     </Menu.Container>
                                                 </div>
-                                            </div>) : <>
-                                                <div>{'Hello World'}</div>
-                                            </>}
+                                            </div>) : <div className='mt-2'>
+                                                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
+                                                    <div
+                                                        key={day}
+                                                        className='dateTime flex align-items-center'
+                                                    >
+                                                        <div>
+                                                            <label className='flex items-center'>
+                                                                <input
+                                                                    type='checkbox'
+                                                                    checked={true}
+                                                                    onChange={() => {
+                                                                    }}
+                                                                />
+                                                                <FormattedMessage
+                                                                    id='dateSelector_day'
+                                                                    defaultMessage={day}
+                                                                />
+                                                            </label>
+                                                        </div>
+                                                        <div className='dateTime__time'>
+                                                            <Menu.Container
+                                                                menuButton={{
+                                                                    id: `${day}_time_button_start`,
+                                                                    'aria-label': 'Time',
+                                                                    class: 'date-time-input',
+                                                                    children: (
+                                                                        <>
+                                                                            <span className='date-time-input__icon'>
+                                                                                <i className='icon-clock-outline'/>
+                                                                            </span>
+                                                                            <span className='date-time-input__value'>
+                                                                                <FormattedMessage
+                                                                                    id='primary.label'
+                                                                                    defaultMessage={moment(dateOptions[0].value, 'HH:mm').format('HH:mm')}
+                                                                                />
+                                                                            </span>
+                                                                        </>
+                                                                    ),
+                                                                }}
+                                                                menu={{
+                                                                    id: `${day}_expiryTimeMenu_start`,
+                                                                    'aria-label': 'Choose a time',
+                                                                    width: '200px',
+                                                                    className: 'time-menu-scrollable',
+                                                                }}
+                                                            >
+                                                                {dateOptions.map((option, index) => (
+                                                                    <Menu.Item
+                                                                        key={index}
+                                                                        id={`${day}_time_option_start_${index}`}
+                                                                        data-testid={`${day}_time_option_start_${index}`}
+                                                                        labels={
+                                                                            <FormattedMessage
+                                                                                id='primary.label'
+                                                                                defaultMessage={moment(option.value, 'HH:mm').format('HH:mm')}
+                                                                            />
+                                                                        }
+                                                                        onClick={() => {}}
+                                                                    />
+                                                                ))}
+                                                            </Menu.Container>
+                                                        </div>
+
+                                                        <p className='mx-2 mb-0'>{'to'}</p>
+
+                                                        {/* ---- End Time ---- */}
+                                                        <div className='dateTime__time'>
+                                                            <Menu.Container
+                                                                menuButton={{
+                                                                    id: `${day}_time_button_end`,
+                                                                    'aria-label': 'Time',
+                                                                    class: 'date-time-input',
+                                                                    children: (
+                                                                        <>
+                                                                            <span className='date-time-input__icon'>
+                                                                                <i className='icon-clock-outline'/>
+                                                                            </span>
+                                                                            <span className='date-time-input__value'>
+                                                                                <FormattedMessage
+                                                                                    id='primary.label'
+                                                                                    defaultMessage={moment(dateOptions[0].value, 'HH:mm').format('HH:mm')}
+                                                                                />
+                                                                            </span>
+                                                                        </>
+                                                                    ),
+                                                                }}
+                                                                menu={{
+                                                                    id: `${day}_expiryTimeMenu_end`,
+                                                                    'aria-label': 'Choose a time',
+                                                                    width: '200px',
+                                                                    className: 'time-menu-scrollable',
+                                                                }}
+                                                            >
+                                                                {dateOptions.map((option, index) => (
+                                                                    <Menu.Item
+                                                                        key={index}
+                                                                        id={`${day}_time_option_end_${index}`}
+                                                                        data-testid={`${day}_time_option_end_${index}`}
+                                                                        labels={
+                                                                            <FormattedMessage
+                                                                                id='primary.label'
+                                                                                defaultMessage={moment(option.value, 'HH:mm').format('HH:mm')}
+                                                                            />
+                                                                        }
+                                                                        onClick={() => {}}
+                                                                    />
+                                                                ))}
+                                                            </Menu.Container>
+                                                        </div>
+                                                    </div>
+
+                                                ))}
+                                            </div>
+                                        }
                                     </>) : <></>}
                             </fieldset>
 
